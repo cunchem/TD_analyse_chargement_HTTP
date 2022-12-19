@@ -23,6 +23,12 @@ ipTools = IP2Location.IP2LocationIPTools()
 
 # vvvv Ne pas modifier vvvv:
 def plot_data(my_data) :
+    '''
+    Génère les graphes de résultats à partir d'une liste 2D dans laquelle chaque ligne correspond aux attributs d'un échange réseau
+        Parameters:
+            my_data : une liste 2D donc chaque ligne contient les attributs ['hostname','tld','domain','requestSize', 'responseSize', 'country'] d'un échange réseau
+    '''
+    
     my_array = np.array(my_data)  
     fig, axes = plt.subplots(nrows=3, ncols=2, constrained_layout = True)
     
@@ -50,6 +56,15 @@ def plot_data(my_data) :
 
         
 def analyse_entry(entry):
+    '''
+    Analyse une entrée HAR et retourne une liste contenant des informations sur cet échange
+        Parameters :
+            entry : (HARentry) une entrée HAR correspondant à un échange réseau
+        Returns : 
+            res : une liste contenant des informations sur la page :  hostname, tld, domain_2, requestSize, responseSize, country
+    '''
+    
+    
     print("=============================")
 
     # Liste des variables à renseigner
