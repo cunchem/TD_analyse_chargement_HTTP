@@ -4,7 +4,7 @@ from haralyzer import HarPage # pour l'analyse de fichiers HAR
 
 
 hostname = "www.sydney.edu.au"
-ipv6_server = "2606:4700::6812:1ef8" # ici en IPV6
+ip_server = "2606:4700::6812:1ef8" # ici en IPV6
 
 
 #  Récupération du TLD (Top Level Domain) et du domaine à partir d'un nom
