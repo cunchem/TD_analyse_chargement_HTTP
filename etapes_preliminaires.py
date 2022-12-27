@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import IP2Location # pour obtenir la geoloc à partir d'une adresse IP
 import json # necessaire pour HarPage
 from haralyzer import HarPage # pour l'analyse de fichiers HAR
