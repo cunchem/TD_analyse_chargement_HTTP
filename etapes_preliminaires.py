@@ -28,7 +28,7 @@ ipTools = IP2Location.IP2LocationIPTools()
 # La doc https://www.ip2location.com/development-libraries/ip2location/python
 
 # Il faut distinguer les cas en fonction du type d'adresse IP (v4 ou v6) (en utilisant ipTools)
-if ipTools.is_ipv4(ip_serveur) : 
+if ipTools.is_ipv4(ip_server) : 
     rec = baseIPV4.get_all(ip_server) # Si l'adresse est en IPV4 on récupère l'enregistrement via la baseIPV4 en utilisant la fonction getall() 
 else :
     rec = baseIPV6.get_all(ip_server) # Sinon (l'adresse est en IPV6) on récupère l'enregistrement sur la baseIPV6
