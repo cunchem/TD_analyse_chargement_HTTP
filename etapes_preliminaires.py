@@ -1,10 +1,11 @@
+# -*- coding: utf-8 -*-
 import IP2Location # pour obtenir la geoloc à partir d'une adresse IP
 import json # necessaire pour HarPage
-from haralyzer import HarPage # pour l'analyse de fichiers HAR
+from haralyzer import HarParser, HarPage # pour l'analyse de fichiers HAR
 
 
 hostname = "www.sydney.edu.au"
-ipv6_server = "2606:4700::6812:1ef8" # ici en IPV6
+ip_server = "2606:4700::6812:1ef8" # ici en IPV6
 
 
 #  Récupération du TLD (Top Level Domain) et du domaine à partir d'un nom
@@ -28,11 +29,11 @@ ipTools = IP2Location.IP2LocationIPTools()
 # La doc https://www.ip2location.com/development-libraries/ip2location/python
 
 # Il faut distinguer les cas en fonction du type d'adresse IP (v4 ou v6) (en utilisant ipTools)
-if ipTools.is_ipv4(ip_serveur) : 
+if ipTools.is_ipv4(ip_server) : 
     rec = baseIPV4.get_all(ip_server) # Si l'adresse est en IPV4 on récupère l'enregistrement via la baseIPV4 en utilisant la fonction getall() 
 else :
     rec = baseIPV6.get_all(ip_server) # Sinon (l'adresse est en IPV6) on récupère l'enregistrement sur la baseIPV6
-    
+
 # On dispose maintenant de l'enregistrement "rec" correspondant à l'ip
 # On peut maintenant accéder aux différents champs de l'enregistrement
 lat = rec.latitude # latitude
@@ -46,25 +47,48 @@ print(f"code pays : {country}")
 # Lecture du fichier HAR
 # Un fichier HAR est structuré comme une liste d'entrée (record). Chaque entrée correspond à un échange réseau, et donc à une ligne dans la console du navigateur
 
+# # On ouvre un fichier HAR en utilisant la fonction open  
+# with open("example.har", 'r') as f:
+#     # On charge ensuite la structure dans la variable har_page à l'aide de la fonction HarPage  
+#     har_page = HarPage('page_1', har_data=json.loads(f.read())) # Attention le parametre page_1 peut avoir une autre valeur (généralement page_3)
+
+# # On parcours ensuite la structure entrée par entrée
+# for e in har_page.entries:
+#     print("== entrée HAR : ==")
+#     # chaque entrée e correspond à record représentant une interaction réseau
+#     # une entrée est composée de différents attributs représentant les caractéristiques de l'échange
+#     # par exemple l'attribut  e.url contient l'URL demandée
+#     url = e.url
+#     print(f"URL : {url}")
+#     # Il existe d'autres attributs https://haralyzer.readthedocs.io/en/latest/basic/harentry.html
+#     # Affichez les attributs suivants : addresse IP du serveur, port, nom de l'hote (serveur) 
+#     print(e.serverAddress)
+#     print(e.port)
+#     print(e.request.host) # Attention l'attribut e.hostname correspond au hostname de la page demandé
+    
 # On ouvre un fichier HAR en utilisant la fonction open  
 with open("example.har", 'r') as f:
-    # On charge ensuite la structure dans la variable har_page à l'aide de la fonction HarPage  
-    har_page = HarPage('page_1', har_data=json.loads(f.read())) # Attention le parametre page_1 peut avoir une autre valeur (généralement page_3)
+    # On charge ensuite la structure entière dans har_parser  
+    har_parser = HarParser(json.loads(f.read()))
 
-# On parcours ensuite la structure entrée par entrée
-for e in har_page.entries:
-    print("== entrée HAR : ==")
-    # chaque entrée e correspond à record représentant une interaction réseau
-    # une entrée est composée de différents attributs représentant les caractéristiques de l'échange
-    # par exemple l'attribut  e.url contient l'URL demandée
-    url = e.url
-    print(f"URL : {url}")
-    # Il existe d'autres attributs https://haralyzer.readthedocs.io/en/latest/basic/harentry.html
-    # Affichez les attributs suivants : addresse IP du serveur, port, nom de l'hote (serveur) 
-    print(e.serverAddress)
-    print(e.port)
-    print(e.request.host) # Attention l'attribut e.hostname correspond au hostname de la page demandé
-    
+# On parcours chaque page chargée
+for har_page in har_parser.pages:
+    print()
+    print("===== Page HAR : =====")
+    print(str(har_page))
+    # On parcours ensuite la structure entrée par entrée
+    for e in har_page.entries:
+        print("-- entrée HAR : --")
+        # chaque entrée e correspond à record représentant une interaction réseau
+        # une entrée est composée de différents attributs représentant les caractéristiques de l'échange
+        # par exemple l'attribut  e.url contient l'URL demandée
+        url = e.url
+        print(f"URL : {url}")
+        # Il existe d'autres attributs https://haralyzer.readthedocs.io/en/latest/basic/harentry.html
+        # Affichez les attributs suivants : addresse IP du serveur, port, nom de l'hote (serveur) 
+        print(e.serverAddress)
+        print(e.port)
+        print(e.request.host) # Attention l'attribut e.hostname correspond au hostname de la page demandé
 
 
     
