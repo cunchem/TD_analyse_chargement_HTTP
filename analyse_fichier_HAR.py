@@ -122,7 +122,7 @@ def analyse_entry(entry):
         Parameters :
             entry : (HARentry) une entrée HAR correspondant à un échange réseau
         Returns : 
-            res : une liste contenant des informations sur la page :  hostname, tld, domain_2, requestSize, responseSize, country
+            res : une liste contenant des informations sur la page :  hostname, tld, domain_2, requestSize, responseSize, country, ou None si il y a un problème avec l'entrée
     '''
     
     
@@ -140,7 +140,10 @@ def analyse_entry(entry):
     try :
         ipServeur = entry.serverAddress
     except KeyError :
-        ipServeur = "0.0.0.0" # mettre à une valeur par défaut si l'attribut est absent
+        # Certaines entrée n'ont pas d'attribut serverAdress car elles ont été bloquées
+        # Dans ce cas, on retourne None à la place de la liste
+        return None    
+        
         
     # TODO : récupérer / calculer la valeurs des variables précédentes
     
@@ -175,8 +178,9 @@ with open("har_data.har", 'r') as f:
 
 my_data = []
 for e in har_page.entries:
-   a = analyse_entry(e)
-   print(a)
-   my_data += [a]
+    a = analyse_entry(e)
+    print(a)
+    if a != None : # on ignore les None (problème identifié avec l'entrée)
+        my_data += [a]
 process_data(my_data)
 
