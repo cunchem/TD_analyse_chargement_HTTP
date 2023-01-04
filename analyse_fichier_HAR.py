@@ -22,36 +22,97 @@ ipTools = IP2Location.IP2LocationIPTools()
 
 
 # vvvv Ne pas modifier vvvv:
-def plot_data(my_data) :
+
+def process_data(my_data) : 
     '''
-    Génère les graphes de résultats à partir d'une liste 2D dans laquelle chaque ligne correspond aux attributs d'un échange réseau
+    Traite les données pour produire des résultats (valeurs et plots) à partir d'une liste 2D dans laquelle chaque ligne correspond aux attributs d'un échange réseau
         Parameters:
             my_data : une liste 2D donc chaque ligne contient les attributs ['hostname','tld','domain','requestSize', 'responseSize', 'country'] d'un échange réseau
     '''
-    
-    my_array = np.array(my_data)  
-    fig, axes = plt.subplots(nrows=3, ncols=2, constrained_layout = True)
-    
+    # préparation du dataframe    
+    my_array = np.array(my_data)      
     df = pd.DataFrame(my_array, columns = ['hostname','tld','domain','requestSize', 'responseSize', 'country'])
     df=df.astype({'requestSize' : 'int64', 'responseSize' : 'int64'})
+    # Conversion des tailles de données en Ko (/1000)
+    df['requestSize']=df['requestSize'].div(1000)
+    df['responseSize']=df['responseSize'].div(1000)
+    
     print("="*20)
     # nb de domaines de second niveau contactés
     nb_domain = len(pd.unique(df["domain"]))
     print(f"Nombre de domaine de second niveau : {nb_domain}")    
-    
+    plot_data(df)
+
+
+def plot_vol_sent_per_country(df,axes):
     # Volume de données envoyé par pays
-    df.groupby("country")["requestSize"].sum().sort_values(ascending=True).plot(kind='barh',ax=axes[0,0],title = "Volume envoyé par pays")
-    # Volume de données recues par pays
-    df.groupby("country")["responseSize"].sum().sort_values(ascending=True).plot(kind='barh',ax=axes[0,1],title = "Volume reçu par pays")
-    # Volume de données envoyé par domaine de 2nd niveau
-    df.groupby("domain")["requestSize"].sum().sort_values(ascending=True).tail(15).plot(kind='barh',ax=axes[1,0],title = "Volume envoyé par domaine 2nd niv")
-    # Volume de données recues par domaine de 2nd niveau
-    df.groupby("domain")["responseSize"].sum().sort_values(ascending=True).tail(15).plot(kind='barh',ax=axes[1,1],title = "Volume reçu par domaine 2nd niv")
-    # Nombre d'échanges par pays
-    df.groupby("country")["country"].count().sort_values(ascending=True).plot(kind='barh',ax=axes[2,0],title = "Nb. échanges par pays")
-    # Nombre d'échanges par domaine de 2nd niveau
-    df.groupby("domain")["domain"].count().sort_values(ascending=True).tail(15).plot(kind='barh',ax=axes[2,1],title = "Nb. échanges par domaine 2nd niv")
+    data = df.groupby("country")["requestSize"].sum().sort_values(ascending=True)
+    plot_subplot(data,axes,"Volume (Ko)","Volume envoyé par pays")
     
+def plot_vol_recv_per_country(df,axes):
+    # Volume de données recues par pays
+    data = df.groupby("country")["responseSize"].sum().sort_values(ascending=True)
+    plot_subplot(data,axes,"Volume (Ko)","Volume recu par pays")
+    
+def plot_vol_sent_per_2nd_lvl_domain(df,axes):
+     # Volume de données envoyé par domaine de 2nd niveau
+    data = df.groupby("domain")["requestSize"].sum().sort_values(ascending=True).tail(15)
+    plot_subplot(data,axes,"Volume (Ko)","Volume envoyé par domaine de 2nd niveau")
+
+def plot_vol_recv_per_2nd_lvl_domain(df,axes):
+     # Volume de données reçu par domaine de 2nd niveau
+    data = df.groupby("domain")["responseSize"].sum().sort_values(ascending=True).tail(15)
+    plot_subplot(data,axes,"Volume (Ko)","Volume reçu par domaine de 2nd niveau")
+    
+def plot_vol_recv_per_country(df,axes):
+    # Volume de données recues par pays
+    data = df.groupby("country")["responseSize"].sum().sort_values(ascending=True)
+    plot_subplot(data,axes,"Volume (Ko)","Volume recu par pays")
+
+def plot_nb_exchange_per_country(df,axes):
+    # Nombre d'échanges par pays
+    data = df.groupby("country")["country"].count().sort_values(ascending=True)
+    plot_subplot(data,axes,"Nb. echanges","Nb. échanges par pays")
+
+def plot_nb_exchange_per_2nd_lvl_domain(df,axes):
+    # Nombre d'échanges par domaine de 2nd niveau
+    data = df.groupby("domain")["domain"].count().sort_values(ascending=True).tail(15)
+    plot_subplot(data,axes,"Nb. echanges","Nb. échanges par domaine 2nd niv")
+
+    
+def plot_subplot(data,axes,xlabel,title):
+    '''
+    Génère, à partir de données, un subplot placé sur des axes avec un titre global et un titre pour l'axe des abscisses
+        Parameters:
+            data : les données sous forme d'une liste d'entiers
+            axes : les axes sur lesquels sera placé le subplot
+            xlabel : le titre de l'axe des abscisses
+            title : le titre global du subplot
+    '''
+    axes.set_xlabel(xlabel)
+    axes.set_title(title,y=-0.5)
+    data.plot(kind='barh',ax=axes)
+    
+def plot_data(df) :
+    '''
+    Génère les graphes de résultats à partir d'un dataframe 2D dans laquelle chaque ligne correspond aux attributs d'un échange réseau
+        Parameters:
+            df : un dataframe 2D donc chaque ligne contient les attributs ['hostname','tld','domain','requestSize', 'responseSize', 'country'] d'un échange réseau
+    '''
+    # préparation des plots
+    fig, axes = plt.subplots(nrows=3, ncols=2, constrained_layout = True)
+    # Volume de données envoyé par pays
+    plot_vol_sent_per_country(df,axes[0,0])
+    # Volume de données recues par pays
+    plot_vol_recv_per_country(df,axes[0,1])
+    # Volume de données envoyé par domaine de 2nd niveau
+    plot_vol_sent_per_2nd_lvl_domain(df,axes[1,0])
+    # Volume de données recues par domaine de 2nd niveau
+    plot_vol_recv_per_2nd_lvl_domain(df,axes[1,1])
+    # Nombre d'échanges par pays
+    plot_nb_exchange_per_country(df,axes[2,0])
+    # Nombre d'échanges par domaine de 2nd niveau
+    plot_nb_exchange_per_2nd_lvl_domain(df,axes[2,1])
 
 
         
@@ -117,5 +178,5 @@ for e in har_page.entries:
    a = analyse_entry(e)
    print(a)
    my_data += [a]
-plot_data(my_data)
+process_data(my_data)
 
