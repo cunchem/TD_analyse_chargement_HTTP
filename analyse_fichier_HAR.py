@@ -22,7 +22,6 @@ ipTools = IP2Location.IP2LocationIPTools()
 
 
 # vvvv Ne pas modifier vvvv:
-
 def process_data(my_data) : 
     '''
     Traite les données pour produire des résultats (valeurs et plots) à partir d'une liste 2D dans laquelle chaque ligne correspond aux attributs d'un échange réseau
@@ -115,6 +114,77 @@ def plot_data(df) :
     plot_nb_exchange_per_2nd_lvl_domain(df,axes[2,1])
 
 
+# Fonctions provenant de l'exercice préliminaire 
+# TODO : ajouter vos fonctions ici 
+    
+def get_tld(hostname):
+    '''
+    Retourne le TLD d'un hostname
+    Parameters :
+        hostname (string) : le hostname
+    Returns :
+        tld (string) : le TLD
+    '''
+    tld = hostname.split('.')[-1]
+    return tld
+
+def get_2nd_lvl_domain(hostname):
+    '''
+    Retourne le domaine de second niveau d'un hostname
+    Parameters :
+        hostname (string) : le hostname
+    Returns :
+        domain_2 (string) : le domaine de second niveau
+    '''
+    tld = get_tld(hostname)
+    domain_2 = hostname.split('.')[-2] + "." + tld
+    return domain_2
+    
+
+def affiche_type_adresse(ip):
+    '''
+    Affiche le type d'une adresse IP
+    Parameters :
+        ip (string) : l'adresse IP
+    '''
+    if ipTools.is_ipv4(ip) : 
+        print("IPV4")
+    else :
+        print("IPV6")
+
+def get_IP2Loc_record(ip):
+    '''
+    Récupère l'enregristrement IP2Location correspondant à une adresse IP
+    Parameters :
+        ip (string) : l'adresse IP
+    Returns : 
+        rec (record) : l'enregistrement 
+    '''
+    # IP2Location stocke les information de geoloc sous forme d'enregistrementn : une structure contenant plusieurs champs : lat, lng, country ..
+    # La doc https://www.ip2location.com/development-libraries/ip2location/python
+
+    # Il faut distinguer les cas en fonction du type d'adresse IP (v4 ou v6) (en utilisant ipTools)
+    if ipTools.is_ipv4(ip) : 
+        rec = baseIPV4.get_all(ip) # Si l'adresse est en IPV4 on récupère l'enregistrement via la baseIPV4 en utilisant la fonction getall() 
+    else :
+        rec = baseIPV6.get_all(ip) # Sinon (l'adresse est en IPV6) on récupère l'enregistrement sur la baseIPV6
+    return rec
+
+def get_country_code(ip):
+    '''
+    Retourne le code pays associé à une adresse IP
+    Parameters :
+        ip (string) : l'adresse IP
+    Returns : 
+        country_code : le code pays
+    '''
+    rec = get_IP2Loc_record(ip)    
+    return rec.country_short
+    
+
+    
+
+# Analyse d'une entrée
         
 def analyse_entry(entry):
     '''
@@ -124,10 +194,8 @@ def analyse_entry(entry):
         Returns : 
             res : une liste contenant des informations sur la page :  hostname, tld, domain_2, requestSize, responseSize, country, ou None si il y a un problème avec l'entrée
     '''
-    
-    
     print("=============================")
-
+    
     # Liste des variables à renseigner
     hostname = ""
     tld = "" # Top Level Domain
@@ -138,33 +206,29 @@ def analyse_entry(entry):
     
     # Récupération de l'IP du serveur :
     try :
-        ipServeur = entry.serverAddress
+        ip_server = entry.serverAddress
     except KeyError :
         # Certaines entrée n'ont pas d'attribut serverAdress car elles ont été bloquées
         # Dans ce cas, on retourne None à la place de la liste
         return None    
         
-        
     # TODO : récupérer / calculer la valeurs des variables précédentes
-    
     # Hostname
     hostname = entry.request.host
     print(f"hostname = {hostname}")
+    
     # TLD et domain_2
-    tld = hostname.split('.')[-1]
+    tld = get_tld(hostname)
     print(f"TLD = {tld}")
-    domain_2 = hostname.split('.')[-2] + "." + tld
+    domain_2 = get_2nd_lvl_domain(hostname)
     print(f"domain de second niveau = {domain_2}")
+    
     # requestSize et responseSize
     requestSize = entry.request.bodySize
     responseSize = entry.response.bodySize
-    # country code
     
-    if ipTools.is_ipv4(ipServeur) :
-        rec = baseIPV4.get_all(ipServeur) #https://www.ip2location.com/development-libraries/ip2location/python
-    else :
-        rec = baseIPV6.get_all(ipServeur)
-    country = rec.country_short 
+    # country code
+    country = get_country_code(ip_server)
     
     # Les résultats sont rangés dans une liste avant d'être retournés
     res = [hostname, tld, domain_2, requestSize, responseSize, country]
