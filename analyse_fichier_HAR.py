@@ -91,6 +91,12 @@ def plot_subplot(data,axes,xlabel,title):
     axes.set_xlabel(xlabel)
     axes.set_title(title,y=-0.5)
     data.plot(kind='barh',ax=axes)
+    total = data.sum()
+    for p in axes.patches:
+        percentage = '{:.1f}%'.format(100 * p.get_width()/total)
+        x = p.get_x() + p.get_width() + 0.02
+        y = p.get_y() + p.get_height()/2 -0.1
+        axes.annotate(percentage, (x, y), fontsize = 6)
     
 def plot_data(df) :
     '''

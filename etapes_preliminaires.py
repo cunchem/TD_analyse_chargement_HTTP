@@ -12,7 +12,6 @@ baseIPV6 = IP2Location.IP2Location("IP2LOCATION-LITE-DB5.IPV6.BIN")
 ipTools = IP2Location.IP2LocationIPTools()
 
 
-
 def get_tld(hostname):
     '''
     Retourne le TLD d'un hostname
@@ -43,7 +42,7 @@ def affiche_type_adresse(ip):
     Parameters :
         ip (string) : l'adresse IP
     '''
-    if ipTools.is_ipv4(ip_server) : 
+    if ipTools.is_ipv4(ip) : 
         print("IPV4")
     else :
         print("IPV6")
@@ -60,10 +59,10 @@ def get_IP2Loc_record(ip):
     # La doc https://www.ip2location.com/development-libraries/ip2location/python
 
     # Il faut distinguer les cas en fonction du type d'adresse IP (v4 ou v6) (en utilisant ipTools)
-    if ipTools.is_ipv4(ip_server) : 
-        rec = baseIPV4.get_all(ip_server) # Si l'adresse est en IPV4 on récupère l'enregistrement via la baseIPV4 en utilisant la fonction getall() 
+    if ipTools.is_ipv4(ip) : 
+        rec = baseIPV4.get_all(ip) # Si l'adresse est en IPV4 on récupère l'enregistrement via la baseIPV4 en utilisant la fonction getall() 
     else :
-        rec = baseIPV6.get_all(ip_server) # Sinon (l'adresse est en IPV6) on récupère l'enregistrement sur la baseIPV6
+        rec = baseIPV6.get_all(ip) # Sinon (l'adresse est en IPV6) on récupère l'enregistrement sur la baseIPV6
     return rec
 
 def get_country_code(ip):
@@ -77,6 +76,7 @@ def get_country_code(ip):
     rec = get_IP2Loc_record(ip)    
     return rec.country_short
     
+
 # ==== Test des fonctions ====
 # On utilisera les coordonnées du site web d'une université australienne 
 hostname = "www.sydney.edu.au"
@@ -96,8 +96,7 @@ print(f"code pays : {country}")
 
 
 
-
-# Lecture du fichier HAR
+# Ouverture d'une fichier HAR (Q3.5)
 # Un fichier HAR est structuré comme une liste d'entrée (record). Chaque entrée correspond à un échange réseau, et donc à une ligne dans la console du navigateur
     
 # On ouvre un fichier HAR en utilisant la fonction open  
