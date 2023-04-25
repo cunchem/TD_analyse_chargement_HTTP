@@ -131,8 +131,7 @@ def get_tld(hostname):
     Returns :
         tld (string) : le TLD
     '''
-    tld = hostname.split('.')[-1]
-    return tld
+
 
 def get_2nd_lvl_domain(hostname):
     '''
@@ -142,10 +141,7 @@ def get_2nd_lvl_domain(hostname):
     Returns :
         domain_2 (string) : le domaine de second niveau
     '''
-    tld = get_tld(hostname)
-    domain_2 = hostname.split('.')[-2] + "." + tld
-    return domain_2
-    
+
 
 def affiche_type_adresse(ip):
     '''
@@ -153,10 +149,7 @@ def affiche_type_adresse(ip):
     Parameters :
         ip (string) : l'adresse IP
     '''
-    if ipTools.is_ipv4(ip) : 
-        print("IPV4")
-    else :
-        print("IPV6")
+
 
 def get_IP2Loc_record(ip):
     '''
@@ -170,11 +163,7 @@ def get_IP2Loc_record(ip):
     # La doc https://www.ip2location.com/development-libraries/ip2location/python
 
     # Il faut distinguer les cas en fonction du type d'adresse IP (v4 ou v6) (en utilisant ipTools)
-    if ipTools.is_ipv4(ip) : 
-        rec = baseIPV4.get_all(ip) # Si l'adresse est en IPV4 on récupère l'enregistrement via la baseIPV4 en utilisant la fonction getall() 
-    else :
-        rec = baseIPV6.get_all(ip) # Sinon (l'adresse est en IPV6) on récupère l'enregistrement sur la baseIPV6
-    return rec
+
 
 def get_country_code(ip):
     '''
@@ -184,9 +173,6 @@ def get_country_code(ip):
     Returns : 
         country_code : le code pays
     '''
-    rec = get_IP2Loc_record(ip)    
-    return rec.country_short
-    
 
     
 
@@ -220,21 +206,7 @@ def analyse_entry(entry):
         
     # TODO : récupérer / calculer la valeurs des variables précédentes
     # Hostname
-    hostname = entry.request.host
-    print(f"hostname = {hostname}")
-    
-    # TLD et domain_2
-    tld = get_tld(hostname)
-    print(f"TLD = {tld}")
-    domain_2 = get_2nd_lvl_domain(hostname)
-    print(f"domain de second niveau = {domain_2}")
-    
-    # requestSize et responseSize
-    requestSize = entry.request.bodySize
-    responseSize = entry.response.bodySize
-    
-    # country code
-    country = get_country_code(ip_server)
+
     
     # Les résultats sont rangés dans une liste avant d'être retournés
     res = [hostname, tld, domain_2, requestSize, responseSize, country]
@@ -242,7 +214,7 @@ def analyse_entry(entry):
 
 
 # TODO : renseigner le nom du fichier du journal HAR a ouvrir
-har_file_name ="www.insa-lyon.fr_Archive_23-04-06 09-07-38.har"
+har_file_name =""
 #har_file_name = "har_data.har"
 with open(har_file_name, 'r') as f:
     har_page = HarPage('page_1', har_data=json.loads(f.read())) # en cas d'erreur avec le page_id, modifier en "page_1"
