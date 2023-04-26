@@ -118,6 +118,7 @@ def plot_data(df) :
     plot_nb_exchange_per_country(df,axes[2,0])
     # Nombre d'échanges par domaine de 2nd niveau
     plot_nb_exchange_per_2nd_lvl_domain(df,axes[2,1])
+    plt.show()
 
 
 # Fonctions provenant de l'exercice préliminaire 

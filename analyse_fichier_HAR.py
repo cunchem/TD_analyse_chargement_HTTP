@@ -118,6 +118,7 @@ def plot_data(df) :
     plot_nb_exchange_per_country(df,axes[2,0])
     # Nombre d'échanges par domaine de 2nd niveau
     plot_nb_exchange_per_2nd_lvl_domain(df,axes[2,1])
+    plt.show()
 
 
 # Fonctions provenant de l'exercice préliminaire 
@@ -243,9 +244,9 @@ def analyse_entry(entry):
 
 # TODO : renseigner le nom du fichier du journal HAR a ouvrir
 har_file_name ="www.insa-lyon.fr_Archive_23-04-06 09-07-38.har"
-#har_file_name = "har_data.har"
+har_file_name = "har_data.har"
 with open(har_file_name, 'r', encoding="utf-8") as f:
-    har_page = HarPage('page_1', har_data=json.loads(f.read())) # en cas d'erreur avec le page_id, modifier en "page_1"
+    har_page = HarPage('page_3', har_data=json.loads(f.read())) # en cas d'erreur avec le page_id, modifier en "page_1"
 
 
 my_data = []
