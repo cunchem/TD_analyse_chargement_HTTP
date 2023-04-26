@@ -216,7 +216,7 @@ def analyse_entry(entry):
 # TODO : renseigner le nom du fichier du journal HAR a ouvrir
 har_file_name =""
 #har_file_name = "har_data.har"
-with open(har_file_name, 'r') as f:
+with open(har_file_name, 'r', encoding="utf-8") as f:
     har_page = HarPage('page_1', har_data=json.loads(f.read())) # en cas d'erreur avec le page_id, modifier en "page_1"
 
 

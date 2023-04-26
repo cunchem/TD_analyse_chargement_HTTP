@@ -86,9 +86,9 @@ print(f"code pays : {country}")
 
 # Ouverture d'une fichier HAR (Q3.5)
 # Un fichier HAR est structuré comme une liste d'entrée (record). Chaque entrée correspond à un échange réseau, et donc à une ligne dans la console du navigateur
-    
+
 # On ouvre un fichier HAR en utilisant la fonction open  
-with open("example.har", 'r') as f:
+with open("example.har", 'r', encoding="utf-8") as f:
     # On charge ensuite la structure entière dans har_parser  
     har_parser = HarParser(json.loads(f.read()))
 
