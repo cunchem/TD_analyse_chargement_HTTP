@@ -107,9 +107,6 @@ for har_page in har_parser.pages:
         print(f"URL : {url}")
         # Il existe d'autres attributs https://haralyzer.readthedocs.io/en/latest/basic/harentry.html
         # Affichez les attributs suivants : addresse IP du serveur, port, nom de l'hote (serveur) 
-        print(e.serverAddress)
-        print(e.port)
-        print(e.request.host) # Attention l'attribut e.hostname correspond au hostname de la page demandé
-
+       #TODO : Q3.5
 
     
