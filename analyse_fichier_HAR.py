@@ -77,7 +77,15 @@ def plot_nb_exchange_per_2nd_lvl_domain(df,axes):
     # Nombre d'échanges par domaine de 2nd niveau
     data = df.groupby("domain")["domain"].count().sort_values(ascending=True).tail(15)
     plot_subplot(data,axes,"Nb. echanges","Nb. échanges par domaine 2nd niv")
-
+def plot_nb_contact_per_2nd_lvl_domain(df,axes):
+    # Nombre de domaines de 2nd niveau contactés
+    data = df["domain"].value_counts()
+    n = data.size
+    #print(data)
+    print(n)
+    axes.axis('off')
+    axes.text(0.1, 0.1, f'Nombre de domaines de 2nd niveau contactés : {n}', style='italic',   bbox={'facecolor': 'blue', 'alpha': 0.5, 'pad': 10})
+    
     
 def plot_subplot(data,axes,xlabel,title):
     '''
@@ -105,7 +113,7 @@ def plot_data(df) :
             df : un dataframe 2D donc chaque ligne contient les attributs ['hostname','tld','domain','requestSize', 'responseSize', 'country'] d'un échange réseau
     '''
     # préparation des plots
-    fig, axes = plt.subplots(nrows=3, ncols=2, constrained_layout = True)
+    fig, axes = plt.subplots(nrows=4, ncols=2, constrained_layout = True)
     # Volume de données envoyé par pays
     plot_vol_sent_per_country(df,axes[0,0])
     # Volume de données recues par pays
@@ -118,11 +126,18 @@ def plot_data(df) :
     plot_nb_exchange_per_country(df,axes[2,0])
     # Nombre d'échanges par domaine de 2nd niveau
     plot_nb_exchange_per_2nd_lvl_domain(df,axes[2,1])
+    # Desactivation des axes de la 4eme ligne pour faire de la place pour le texte  
+    axes[3,0].axis('off')    
+    axes[3,1].axis('off')
+    # Nombre de domaines tiers / serveur contactés
+    plot_nb_contact_per_2nd_lvl_domain(df,axes[3,0])
+    
+    
     plt.show()
 
 
 # Fonctions provenant de l'exercice préliminaire 
-# TODO : ajouter vos fonctions ici 
+# TODO Q4.1 : ajouter vos fonctions ici 
     
 def get_tld(hostname):
     '''
@@ -219,21 +234,24 @@ def analyse_entry(entry):
         # Dans ce cas, on retourne None à la place de la liste
         return None    
         
-    # TODO : récupérer / calculer la valeurs des variables précédentes
+    # TODO Q4.2 : récupérer / calculer la valeurs des variables précédentes
     # Hostname
     hostname = entry.request.host
     print(f"hostname = {hostname}")
     
+    # TODO Q4.3 
     # TLD et domain_2
     tld = get_tld(hostname)
     print(f"TLD = {tld}")
     domain_2 = get_2nd_lvl_domain(hostname)
     print(f"domain de second niveau = {domain_2}")
     
+    # TODO Q4.4 
     # requestSize et responseSize
     requestSize = entry.request.bodySize
     responseSize = entry.response.bodySize
     
+    # TODO Q4.5 
     # country code
     country = get_country_code(ip_server)
     
@@ -243,7 +261,6 @@ def analyse_entry(entry):
 
 
 # TODO : renseigner le nom du fichier du journal HAR a ouvrir
-har_file_name ="www.insa-lyon.fr_Archive_23-04-06 09-07-38.har"
 har_file_name = "har_data.har"
 with open(har_file_name, 'r', encoding="utf-8") as f:
     har_page = HarPage('page_3', har_data=json.loads(f.read())) # en cas d'erreur avec le page_id, modifier en "page_1"
