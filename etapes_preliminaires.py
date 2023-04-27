@@ -20,6 +20,7 @@ def get_tld(hostname):
     Returns :
         tld (string) : le TLD
     '''
+    # TODO Q3.1
     tld = hostname.split('.')[-1]
     return tld
 
@@ -31,6 +32,7 @@ def get_2nd_lvl_domain(hostname):
     Returns :
         domain_2 (string) : le domaine de second niveau
     '''
+    # TODO Q3.1
     tld = get_tld(hostname)
     domain_2 = hostname.split('.')[-2] + "." + tld
     return domain_2
@@ -42,6 +44,7 @@ def affiche_type_adresse(ip):
     Parameters :
         ip (string) : l'adresse IP
     '''
+    # TODO Q3.2 
     if ipTools.is_ipv4(ip) : 
         print("IPV4")
     else :
@@ -59,6 +62,7 @@ def get_IP2Loc_record(ip):
     # La doc https://www.ip2location.com/development-libraries/ip2location/python
 
     # Il faut distinguer les cas en fonction du type d'adresse IP (v4 ou v6) (en utilisant ipTools)
+    # TODO Q3.3
     if ipTools.is_ipv4(ip) : 
         rec = baseIPV4.get_all(ip) # Si l'adresse est en IPV4 on récupère l'enregistrement via la baseIPV4 en utilisant la fonction getall() 
     else :
@@ -73,6 +77,7 @@ def get_country_code(ip):
     Returns : 
         country_code : le code pays
     '''
+    # TODO Q3.4
     rec = get_IP2Loc_record(ip)    
     return rec.country_short
     
@@ -119,6 +124,7 @@ for har_page in har_parser.pages:
         print(f"URL : {url}")
         # Il existe d'autres attributs https://haralyzer.readthedocs.io/en/latest/basic/harentry.html
         # Affichez les attributs suivants : addresse IP du serveur, port, nom de l'hote (serveur) 
+        # TODO Q3.5
         print(e.serverAddress)
         print(e.port)
         print(e.request.host) # Attention l'attribut e.hostname correspond au hostname de la page demandé
