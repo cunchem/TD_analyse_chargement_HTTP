@@ -20,7 +20,8 @@ def get_tld(hostname):
     Returns :
         tld (string) : le TLD
     '''
-
+    # TODO Q3.1
+    
 
 def get_2nd_lvl_domain(hostname):
     '''
@@ -30,8 +31,8 @@ def get_2nd_lvl_domain(hostname):
     Returns :
         domain_2 (string) : le domaine de second niveau
     '''
-
-    
+    # TODO Q3.1
+ 
 
 def affiche_type_adresse(ip):
     '''
@@ -39,6 +40,8 @@ def affiche_type_adresse(ip):
     Parameters :
         ip (string) : l'adresse IP
     '''
+    # TODO Q3.2 
+  
 
 def get_IP2Loc_record(ip):
     '''
@@ -52,7 +55,8 @@ def get_IP2Loc_record(ip):
     # La doc https://www.ip2location.com/development-libraries/ip2location/python
 
     # Il faut distinguer les cas en fonction du type d'adresse IP (v4 ou v6) (en utilisant ipTools)
-
+    # TODO Q3.3
+  
 
 def get_country_code(ip):
     '''
@@ -62,8 +66,8 @@ def get_country_code(ip):
     Returns : 
         country_code : le code pays
     '''
-
-    
+    # TODO Q3.4
+ 
 
 # ==== Test des fonctions ====
 # On utilisera les coordonnées du site web d'une université australienne 
@@ -86,7 +90,7 @@ print(f"code pays : {country}")
 
 # Ouverture d'une fichier HAR (Q3.5)
 # Un fichier HAR est structuré comme une liste d'entrée (record). Chaque entrée correspond à un échange réseau, et donc à une ligne dans la console du navigateur
-
+    
 # On ouvre un fichier HAR en utilisant la fonction open  
 with open("example.har", 'r', encoding="utf-8") as f:
     # On charge ensuite la structure entière dans har_parser  
@@ -107,6 +111,7 @@ for har_page in har_parser.pages:
         print(f"URL : {url}")
         # Il existe d'autres attributs https://haralyzer.readthedocs.io/en/latest/basic/harentry.html
         # Affichez les attributs suivants : addresse IP du serveur, port, nom de l'hote (serveur) 
-       #TODO : Q3.5
+        # TODO Q3.5
+ 
 
     
