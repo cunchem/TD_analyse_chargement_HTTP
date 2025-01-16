@@ -63,10 +63,6 @@ def plot_vol_recv_per_2nd_lvl_domain(df,axes):
     data = df.groupby("domain")["responseSize"].sum().sort_values(ascending=True).tail(15)
     plot_subplot(data,axes,"Volume (Ko)","Volume reçu par domaine de 2nd niveau")
     
-def plot_vol_recv_per_country(df,axes):
-    # Volume de données recues par pays
-    data = df.groupby("country")["responseSize"].sum().sort_values(ascending=True)
-    plot_subplot(data,axes,"Volume (Ko)","Volume recu par pays")
 
 def plot_nb_exchange_per_country(df,axes):
     # Nombre d'échanges par pays
